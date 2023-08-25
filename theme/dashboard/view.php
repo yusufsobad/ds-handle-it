@@ -48,14 +48,44 @@ class dashboard_layout extends dashboard_template
     				<div class="col-md-4">
     					<div class="label-progress">
     						<?php
+    							$xvalue = $yvalue = $color = [];
 	    						foreach ($data['label'] as $key => $val) {
+	    							$xvalue[] = '"'.$val['label'].'"';
+	    							$yvalue[] = $val['qty'];
+	    							$color[] = '"'.$val['color'].'"';
+
 	    							self::label_progress($val);
 	    						}
+
+	    						$xvalue = implode(',', $xvalue);
+	    						$yvalue = implode(',', $yvalue);
+	    						$color = implode(',', $color);
     						?>
     					</div>
     				</div>
     				<div class="col-md-8">
-    					<div id="chart-progress"></div>
+    					<canvas id="chart-progress"></canvas>
+    					<script type="text/javascript">
+    						var xValues = [<?= $xvalue;?>];
+							var yValues = [<?= $yvalue;?>];
+							var barColors = [<?= $color;?>];
+
+    						new Chart("chart-progress", {
+							  type: "doughnut",
+							  data: {
+							    labels: xValues,
+							    datasets: [{
+							      backgroundColor: barColors,
+							      data: yValues
+							    }]
+							  },
+							  options: {
+						         legend: {
+						            display: false
+						         },
+						    	}
+							});
+    					</script>
     				</div>
     			</div>
     		</div>
@@ -68,10 +98,10 @@ class dashboard_layout extends dashboard_template
     			<div class="header-complain">
     				<label class="title-progress"><?= $data['title'] ;?></label>
     				<span>Total Bug: 
-    					<div class="square-color"><?= $data['total'] ;?></div>
+    					<div class="square-color" style="color: #FAB05C;background-color: #FFEFDD;"><?= $data['total'] ;?></div>
     				</span>
     				<span>Repair Bug: 
-    					<div class="square-color"><?= $data['handle'] ;?></div>
+    					<div class="square-color" style="color: #15BA6B;background-color: #E1FFF1;"><?= $data['handle'] ;?></div>
     				</span>
     			</div>
     			<?php self::table_content($data['table']) ?>

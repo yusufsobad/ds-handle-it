@@ -49,6 +49,19 @@ class request_curl
 		return self::send_curl($data);
 	}
 
+	public static function get_team_projects()
+	{
+		$args = array('ID','status');
+
+		$data = array(
+			'object'	=> 'sobad_workflow',
+			'func'		=> 'get_all',
+			'data'		=> array($args)
+		);
+
+		return self::send_curl($data);
+	}
+
 	public static function get_handle_projects($user=0, $limit = '')
 	{
 		$args = array('ID','workflow_id','work_type','work_time','work_day','work_status','start_date','finish_date','start_actual','finish_actual');

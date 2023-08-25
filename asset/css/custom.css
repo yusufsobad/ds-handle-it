@@ -11,6 +11,22 @@
     overflow: hidden;
 }
 
+.square-color {
+    height: 34px;
+    width: 34px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+table.table-content {
+    width: 100%;
+}
+
+td.body-team {
+    padding: 1px 3px;
+    font-size: 13px;
+}
+
 .name-profile {
     margin-bottom: -7px;
 }
@@ -67,4 +83,76 @@
 .project-team-it .table-content .bag-profile-user{
 	width: 30px;
 	height: 30px;
+}
+
+label.title-progress {
+    font-size: 16px;
+    color: #4D4D4DD6;
+    line-height: 1.1;
+    font-weight: 600;
+}
+
+.label-chart .square-color {
+    height: 15px;
+    width: 15px;
+    border-radius: 5px;
+}
+
+.label-chart>span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #7b7b7b;
+}
+
+.label-chart label {
+    font-size: 17px;
+}
+
+.header-complain {
+    margin-bottom: 10px;
+}
+
+.header-complain label.title-progress {
+    width: 60%;
+}
+
+.header-complain .square-color {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+    padding-top: 3px;
+}
+
+.header-complain>span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #7b7b7b;
+}
+
+.complain-bug-it .table-content th.head-team {
+    color: #A5A5A5;
+    font-size: 12px;
+}
+
+.complain-bug-it .table-content thead tr,
+.complain-bug-it .table-content tbody tr {
+    border-bottom: 1px solid #DEDEDE;
+    border-collapse: collapse;
+}
+
+.complain-bug-it .table-content td.body-team {
+    font-weight: 600;
+}
+
+.project-total {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    right: 6px;
+    background-color: #9D28DD;
+    color: #fff;
+    text-align: center;
+    padding-top: 10px;
+    top: 6px;
+    border-radius: 0px 20px 0px 15px;
 }

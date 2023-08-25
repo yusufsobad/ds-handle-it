@@ -23,6 +23,7 @@ class dashboard_system
 		// url script jQuery - Vendor
 		$get_jquery = $script->_get_('_js_core',array('jquery-core'));
 		$head[0] = '<script src="'.$get_jquery['jquery-core'].'"></script>';
+		$head[1] = '<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>';
 
 		// url script css ----->
 		$css = array_merge(

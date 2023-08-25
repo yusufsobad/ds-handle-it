@@ -21,7 +21,11 @@ abstract class dashboard_template
 			<div class="image-profile">
 				<div class="row">
 					<div class="col-md-4">
-						<img src="<?= $src ;?>" style="width:80%;">
+						<div style="display: grid;justify-content: space-between;text-align:center;">
+		                    <div class="bag-profile-user">
+		                        <img src="<?= $src ;?>" style="width:100%;">
+		                    </div>
+		                </div>
 					</div>
 					<div class="col-md-8">
 						<label><?= $data['name'];?></label>

@@ -107,11 +107,11 @@ class dashboard_it{
 	protected static function _project_team(){
 		$data = array();
 		$thead = array(
-			'No.'		=> array('5%','center'),
+			'No.'		=> array('8%','center'),
 			'Member'	=> array('auto','left'),
-			'Actual'	=> array('12%','center'),
-			'Schedule'	=> array('15%','center'),
-			'Ach. %'	=> array('12%','center'),
+			'Actual'	=> array('15%','center'),
+			'Schedule'	=> array('18%','center'),
+			'Ach. %'	=> array('15%','center'),
 		);
 
 		$data['thead'] = array();
@@ -134,7 +134,7 @@ class dashboard_it{
 			$data['tbody'][] = array(
 				'no'		=> array(
 					'center',
-					$no++
+					$no++ . '.'
 				),
 				'member'	=> array(
 					'left',
@@ -161,22 +161,36 @@ class dashboard_it{
 	protected static function _progress_team(){
 		$data = array();
 
+		$un_sch = $sch = $cmp = $total = 0;
+		$data = request_curl::get_team_projects();
+		foreach ($data as $key => $val) {
+			if($val['status'] == -1){
+				$un_sch += 1;
+			}else if( $val['status'] == 6){
+				$cmp += 1;
+			}else{
+				$sch += 1;
+			}
+		}
+
+		$total = count($data);
+
 		$data['title'] = 'Progress<br>Department Job';
 		$data['label'] = array(
 			array(
 				'label'		=> 'Unschedule',
-				'color'		=> '',
-				'qty'		=> 0
+				'color'		=> '#EDECF0',
+				'qty'		=> $un_sch
 			),
 			array(
 				'label'		=> 'Scheduled',
-				'color'		=> '',
-				'qty'		=> 0
+				'color'		=> '#FBD289',
+				'qty'		=> $sch
 			),
 			array(
 				'label'		=> 'Completed',
-				'color'		=> '',
-				'qty'		=> 0
+				'color'		=> '#3FB8FC',
+				'qty'		=> $cmp
 			)
 		);
 
@@ -214,7 +228,7 @@ class dashboard_it{
 		foreach ($complain as $key => $val) {
 			$repair += $val['handle_date'] == '0000-00-00' || $val['handle_date'] == '1970-01-01' ? 0 : 1;
 
-			if($no>4){
+			if($no>5){
 				continue;
 			}
 
@@ -224,7 +238,7 @@ class dashboard_it{
 			$table['tbody'][] = array(
 				'no'		=> array(
 					'center',
-					$no++
+					$no++ . '.'
 				),
 				'compalin'	=> array(
 					'left',
