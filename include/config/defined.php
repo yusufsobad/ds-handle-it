@@ -40,7 +40,7 @@ define('SITE','http');
 define('HOSTNAME',$_SERVER['SERVER_NAME']);
 
 // set name url
-define('URL','cordova-v3');
+define('URL','digital-signage/handle-it');
 
 // set check table
 define('ABOUT','');
@@ -48,7 +48,7 @@ define('ABOUT','');
 // Setting -------------------------------------------
 
 // prefix SESSION
-define('_prefix','cordova_');
+define('_prefix','handle-it_');
 		
 // authentic include
 define('AUTH_KEY','qJB0rGtInG03efyCpWs');
@@ -60,10 +60,10 @@ define('DEFPATH',dirname(__FILE__));
 define('language',true);
 
 // set nama Perusahaan
-define('company','Cordova');
+define('company','SASI');
 
 // set judul Website
-define('title','Cordova');
+define('title','IT Project');
 
 // set Auto Include Page
 define('include_pages', true);
@@ -86,7 +86,7 @@ define('development',0);
 
 // Default Theme
 
-define('theme','metronic');
+define('theme','dashboard');
 
 // Default Theme
 
