@@ -11,11 +11,61 @@
     overflow: hidden;
 }
 
+@media (min-width: 768px) {
+    .row.equal {
+      display: flex;
+      flex-wrap: wrap;
+    }
+}
+
 .square-color {
-    height: 34px;
-    width: 34px;
+    height: 60px;
+    width: 40px;
     border-radius: 5px;
+    background: linear-gradient(126.69deg, #EFDCFF 28.65%, #E2BAFA 84.56%);
+    color: #9D28DD;
+    font-size: 10px;
+    padding: 10px 3px;
+    text-align: center;
     display: inline-block;
+}
+
+.square-color .plan{
+    top: 50%;
+    left: 50%;
+}
+
+.start-date{
+    height: 60px;
+    width: 65px;
+    font-size: 10px;
+    padding: 10px 3px;
+    background: #FAFAFA;
+    background-size: 100% 100%;
+    color: #000000;
+    display: inline-grid;
+    text-align: start;
+}
+
+.start-date span{
+    display: block;
+}
+
+
+.finish-date{
+    height: 60px;
+    width: 65px;
+    font-size: 10px;
+    padding: 10px 3px;
+    background: #FAFAFA;
+    background-size: 100% 100%;
+    color: #000000;
+    display: inline-grid;
+    text-align: start;
+}
+
+.finish-date span{
+    display: block;
 }
 
 table.table-content {
@@ -55,6 +105,7 @@ td.body-team {
 	padding: 15px 20px;
 	border: 1px solid #EFF0F6;
     background-color: #fff;
+    height: 100%;
 }
 
 .project-team-it.box-content {
@@ -155,4 +206,22 @@ label.title-progress {
     padding-top: 10px;
     top: 6px;
     border-radius: 0px 20px 0px 15px;
+}
+
+label.task-label {
+    font-size: 17px;
+    margin: 10px 0 0 0;
+    display: block;
+    font-weight: 500;
+}
+
+label.role-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #777777;
+    display: block;
+}
+
+.date-project {
+    padding: 0 0 10px 0;
 }

@@ -1,15 +1,17 @@
 <?php
 
-class dashboard_it{
+class dashboard_it
+{
 
 	public static $path_image = 'http://soloabadi-server.ddns.net/system-sobad-group/asset/img/user';
 
-	public static function get_profile_user($user = 0){
+	public static function get_profile_user($user = 0)
+	{
 		$default = array(
-			'_nickname'		=> '-',
-			'notes_pict'	=> 'no-profile.jpg',
+			'_nickname' => '-',
+			'notes_pict' => 'no-profile.jpg',
 		);
-		
+
 		$users = request_curl::get_user($user);
 		$data = isset($users[0]) ? $users[0] : $default;
 
@@ -18,31 +20,33 @@ class dashboard_it{
 		$data['picture'] = $data['notes_pict'];
 
 		ob_start();
-		theme_layout('profile_user',$data);
+		theme_layout('profile_user', $data);
 		return ob_get_clean();
 	}
 
-	public static function _image_profile($data = []){
+	public static function _image_profile($data = [])
+	{
 		$data['url'] = self::$path_image;
 		$data['name'] = $data['_nickname'];
 		$data['picture'] = empty($data['notes_pict']) ? 'no-profile.jpg' : $data['notes_pict'];
 		$data['jobtitle'] = $data['meta_value_divi'];
 
 		ob_start();
-		theme_layout('image_profile',$data);
+		theme_layout('image_profile', $data);
 		return ob_get_clean();
 	}
 
-	public static function get_status_project($user = 0){
+	public static function get_status_project($user = 0)
+	{
 		$status = array(
-			'actual' 	=> 0,
-			'schedule'	=> 0,
-			'achievment'=> 0
+			'actual' => 0,
+			'schedule' => 0,
+			'achievment' => 0
 		);
 
 		$data = request_curl::get_handle_projects($user);
 		foreach ($data as $key => $val) {
-			if($val['work_status'] == 4){
+			if ($val['work_status'] == 4) {
 				$status['actual'] += 1;
 			}
 		}
@@ -53,13 +57,15 @@ class dashboard_it{
 		return $status;
 	}
 
-	public static function _conv_work_type($type=0){
-		$args = array(1 => 'UI/UX','System Analyst','Programmer','Tester');
+	public static function _conv_work_type($type = 0)
+	{
+		$args = array(1 => 'UI/UX', 'System Analyst', 'Programmer', 'Tester');
 		return isset($args[$type]) ? $args[$type] : '-';
 	}
 
-	public static function _conv_work_day($type=0){
-		$args = array(1 => 'day','week','month','year');
+	public static function _conv_work_day($type = 0)
+	{
+		$args = array(1 => 'day', 'week', 'month', 'year');
 		return isset($args[$type]) ? $args[$type] : '-';
 	}
 
@@ -67,26 +73,27 @@ class dashboard_it{
 	// ----- Load Here ------------------------------------------
 	// ----------------------------------------------------------
 
-	public static function index(){
+	public static function index()
+	{
 		$project = self::_project_team();
 		$progress = self::_progress_team();
 		$complain = self::_complain_bug();
 
-		$data = array(
+		$head = array(
 			array(
-				'col'	=> 4,
-				'func'	=> 'project_team',
-				'data'	=> $project
+				'col' => 4,
+				'func' => 'project_team',
+				'data' => $project
 			),
 			array(
-				'col'	=> 2,
-				'func'	=> 'progress_team',
-				'data'	=> $progress
+				'col' => 2,
+				'func' => 'progress_team',
+				'data' => $progress
 			),
 			array(
-				'col'	=> 6,
-				'func'	=> 'complain_bug',
-				'data'	=> $complain
+				'col' => 6,
+				'func' => 'complain_bug',
+				'data' => $complain
 			)
 		);
 
@@ -94,24 +101,27 @@ class dashboard_it{
 		foreach ($users as $key => $val) {
 			$user = self::_project_user($val);
 
-			$data[] = array(
-				'col'	=> 2,
-				'func'	=> 'project_user',
-				'data'	=> $user
+			$body[] = array(
+				'col' => 2,
+				'func' => 'project_user',
+				'data' => $user
 			);
 		}
+
+		$data = ['head' => $head, 'body' => $body];
 
 		return $data;
 	}
 
-	protected static function _project_team(){
+	protected static function _project_team()
+	{
 		$data = array();
 		$thead = array(
-			'No.'		=> array('8%','center'),
-			'Member'	=> array('auto','left'),
-			'Actual'	=> array('15%','center'),
-			'Schedule'	=> array('18%','center'),
-			'Ach. %'	=> array('15%','center'),
+			'No.' => array('8%', 'center'),
+			'Member' => array('auto', 'left'),
+			'Actual' => array('15%', 'center'),
+			'Schedule' => array('18%', 'center'),
+			'Ach. %' => array('15%', 'center'),
 		);
 
 		$data['thead'] = array();
@@ -119,9 +129,9 @@ class dashboard_it{
 
 		foreach ($thead as $key => $val) {
 			$data['thead'][] = array(
-				'width'		=> $val[0],
-				'align'		=> $val[1],
-				'label'		=> $key
+				'width' => $val[0],
+				'align' => $val[1],
+				'label' => $key
 			);
 		}
 
@@ -132,23 +142,23 @@ class dashboard_it{
 			$handle = self::get_status_project($val['ID']);
 
 			$data['tbody'][] = array(
-				'no'		=> array(
+				'no' => array(
 					'center',
 					$no++ . '.'
 				),
-				'member'	=> array(
+				'member' => array(
 					'left',
 					$member
 				),
-				'act'		=> array(
+				'act' => array(
 					'center',
 					$handle['actual']
 				),
-				'sch'		=> array(
+				'sch' => array(
 					'center',
 					$handle['schedule']
 				),
-				'ach'		=> array(
+				'ach' => array(
 					'center',
 					$handle['achievment'] . '%'
 				)
@@ -158,17 +168,18 @@ class dashboard_it{
 		return $data;
 	}
 
-	protected static function _progress_team(){
+	protected static function _progress_team()
+	{
 		$data = array();
 
 		$un_sch = $sch = $cmp = $total = 0;
 		$data = request_curl::get_team_projects();
 		foreach ($data as $key => $val) {
-			if($val['status'] == -1){
+			if ($val['status'] == -1) {
 				$un_sch += 1;
-			}else if( $val['status'] == 6){
+			} else if ($val['status'] == 6) {
 				$cmp += 1;
-			}else{
+			} else {
 				$sch += 1;
 			}
 		}
@@ -178,36 +189,37 @@ class dashboard_it{
 		$data['title'] = 'Progress<br>Department Job';
 		$data['label'] = array(
 			array(
-				'label'		=> 'Unschedule',
-				'color'		=> '#EDECF0',
-				'qty'		=> $un_sch
+				'label' => 'Unschedule',
+				'color' => '#EDECF0',
+				'qty' => $un_sch
 			),
 			array(
-				'label'		=> 'Scheduled',
-				'color'		=> '#FBD289',
-				'qty'		=> $sch
+				'label' => 'Scheduled',
+				'color' => '#FBD289',
+				'qty' => $sch
 			),
 			array(
-				'label'		=> 'Completed',
-				'color'		=> '#3FB8FC',
-				'qty'		=> $cmp
+				'label' => 'Completed',
+				'color' => '#3FB8FC',
+				'qty' => $cmp
 			)
 		);
 
 		return $data;
 	}
 
-	protected static function _complain_bug(){
+	protected static function _complain_bug()
+	{
 		$data = $table = array();
 		$repair = 0;
 
 		$thead = array(
-			'No.'		=> array('5%','center'),
-			'Complain'	=> array('auto','left'),
-			'Date'		=> array('15%','left'),
-			'User'		=> array('12%','left'),
-			'Repair'	=> array('15%','left'),
-			'PIC'		=> array('12%','left'),
+			'No.' => array('5%', 'center'),
+			'Complain' => array('auto', 'left'),
+			'Date' => array('15%', 'left'),
+			'User' => array('12%', 'left'),
+			'Repair' => array('15%', 'left'),
+			'PIC' => array('12%', 'left'),
 		);
 
 		$table['thead'] = array();
@@ -215,9 +227,9 @@ class dashboard_it{
 
 		foreach ($thead as $key => $val) {
 			$table['thead'][] = array(
-				'width'		=> $val[0],
-				'align'		=> $val[1],
-				'label'		=> $key
+				'width' => $val[0],
+				'align' => $val[1],
+				'label' => $key
 			);
 		}
 
@@ -228,7 +240,7 @@ class dashboard_it{
 		foreach ($complain as $key => $val) {
 			$repair += $val['handle_date'] == '0000-00-00' || $val['handle_date'] == '1970-01-01' ? 0 : 1;
 
-			if($no>5){
+			if ($no > 5) {
 				continue;
 			}
 
@@ -236,27 +248,27 @@ class dashboard_it{
 			$pic = self::get_profile_user($val['handle_user']);
 
 			$table['tbody'][] = array(
-				'no'		=> array(
+				'no' => array(
 					'center',
 					$no++ . '.'
 				),
-				'compalin'	=> array(
+				'compalin' => array(
 					'left',
 					$val['note_bug']
 				),
-				'date'		=> array(
+				'date' => array(
 					'left',
 					format_date_id($val['request_date'])
 				),
-				'user'		=> array(
+				'user' => array(
 					'left',
 					$user
 				),
-				'repair'		=> array(
+				'repair' => array(
 					'left',
 					format_date_id($val['handle_date'])
 				),
-				'pic'		=> array(
+				'pic' => array(
 					'left',
 					$pic
 				)
@@ -271,26 +283,27 @@ class dashboard_it{
 		return $data;
 	}
 
-	public static function _project_user($args = array()){
+	public static function _project_user($args = array())
+	{
 		$default = array(
-			'meta_value_feat'	=> '-',
-			'workflow_id' 		=> 0,
-			'work_type'			=> 0,
-			'work_time'			=> 0,
-			'work_day'			=> 0,
-			'work_status'		=> 0,
-			'start_date'		=> '0000-00-00',
-			'finish_date'		=> '0000-00-00',
-			'start_actual'		=> '0000-00-00',
-			'finish_actual'		=> '0000-00-00'
+			'meta_value_feat' => '-',
+			'workflow_id' => 0,
+			'work_type' => 0,
+			'work_time' => 0,
+			'work_day' => 0,
+			'work_status' => 0,
+			'start_date' => '0000-00-00',
+			'finish_date' => '0000-00-00',
+			'start_actual' => '0000-00-00',
+			'finish_actual' => '0000-00-00'
 		);
 
-		$work = request_curl::get_handle_projects($args['ID'],"AND work_status='1'");
+		$work = request_curl::get_handle_projects($args['ID'], "AND work_status='1'");
 		$work = isset($work[0]) ? $work[0] : $default;
 
-		$args = array_merge($args,$work);
+		$args = array_merge($args, $work);
 
-		$total = request_curl::get_count_projects($args['ID'],"AND work_status IN (0,1,3)");
+		$total = request_curl::get_count_projects($args['ID'], "AND work_status IN (0,1,3)");
 		$data['total'] = $total;
 
 		$data['title'] = $args['meta_value_feat'];
@@ -309,7 +322,7 @@ class dashboard_it{
 		$data['progress_width'] = '0%';
 		$data['progress'] = '0%';
 
-		$data['worktime'] = $args['work_time'] .' ' . self::_conv_work_day($args['work_day']);
+		$data['worktime'] = $args['work_time'] . ' ' . self::_conv_work_day($args['work_day']);
 
 		return $data;
 	}

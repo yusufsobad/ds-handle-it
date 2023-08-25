@@ -12,22 +12,26 @@ class dashboard_layout extends dashboard_template
     {
     	?>
     		<div class="it-content">
-    			<div class="row">
-    				<?php
-	    				foreach ($data as $key => $val) {
-	    					$func = $val['func'];
-	    					$args = $val['data'];
-
-	    					echo '<div class="col-md-'.$val['col'].'">';
-	    					if (is_callable(array(new self(), $func))) {
-								self::{$func}($args);
+				<?php 
+					foreach ($data as $key => $value) {
+				?>
+					<div id='<?= $key ?>'class="row equal">
+					<?php
+							foreach ($value as $val) {
+								$func = $val['func'];
+								$args = $val['data'];
+	
+								echo '<div id class="col-md-'.$val['col'].'">';
+								if (is_callable(array(new self(), $func))) {
+									self::{$func}($args);
+								}
+								echo '</div>';
 							}
-	    					echo '</div>';
-	    				}
-    				?>
-    			</div>
-    		</div>
-    	<?php
+						?>
+					</div>
+					<?php } ?>
+				</div>
+			<?php
     }
 
     public static function project_team($data = []){
@@ -118,46 +122,46 @@ class dashboard_layout extends dashboard_template
 
     			<?php self::image_profile($data) ;?>
     			
-    			<label><?= $data['title'] ;?></label>
-    			<span><?= $data['jobdesk'] ;?></span>
+    			<label class="task-label"><?= $data['title'] ;?></label>
+    			<label class="role-label"><?= $data['jobdesk'] ;?></label>
     			
     			<div class="date-project">
     				<div class="square-color">
-    					<label>PLAN</label>
+    					<label class="plan">PLAN</label>
     				</div>
     				<div class="square-color start-date">
-    					<span></span>
+    					<span>Start Date</span>
     					<label><?= $data['start_date'] ;?></label>
     				</div>
     				<div class="square-color finish-date">
-    					<span></span>
+    					<span>Finish Date</span>
     					<label><?= $data['finish_date'] ;?></label>
     				</div>
     			</div>
 
     			<div class="date-project">
     				<div class="square-color">
-    					<label>ACT</label>
+    					<label class="plan">ACT</label>
     				</div>
     				<div class="square-color start-date">
-    					<span></span>
+    					<span>Start Date</span>
     					<label><?= $data['start_actual'] ;?></label>
     				</div>
     				<div class="square-color finish-date">
-    					<span></span>
+    					<span>Finish Date</span>
     					<label><?= $data['finish_actual'] ;?></label>
     				</div>
     			</div>
 
     			<div class="progress-project">
-    				<div class="progress-box">
-    					<div class="progress-bar" style="width:<?= $data['progress_width'] ;?>;"></div>
-    				</div>
-    				<span><?= $data['progress'] ;?></span>
+					<div style="width: 90%;background: #edecf0;height: 10px;margin-top: 6px;border-radius: 30px !important;">
+						<div style="background: #1ba9f8;height: 100%;max-width: 100%;min-width: 0%;border-radius: 30px !important; width: <?= $data['progress'] ;?>"></div>
+					</div>
+					<label><?= $data['progress'] ;?></label>
     			</div>
 
     			<div class="workday-project">
-    				<span>Work Day: <strong><?= $data['worktime'] ;?></strong></span>
+    				<p style="text-align: center;">Work Day: <strong><?= $data['worktime'] ;?></strong></p>
     			</div>
     		</div>
     	<?php

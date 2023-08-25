@@ -40,7 +40,7 @@ define('SITE','http');
 define('HOSTNAME',$_SERVER['SERVER_NAME']);
 
 // set name url
-define('URL','digital-signage/handle-it');
+define('URL','ds-handle-it');
 
 // set check table
 define('ABOUT','');
