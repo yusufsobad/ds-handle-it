@@ -64,7 +64,7 @@ class request_curl
 
 	public static function get_handle_projects($user=0, $limit = '')
 	{
-		$args = array('ID','workflow_id','work_type','work_time','work_day','work_status','start_date','finish_date','start_actual','finish_actual');
+		$args = array('workflow_id','work_type','work_time','work_day','work_status','start_date','finish_date','start_actual','finish_actual');
 		$whr = "AND user_id='$user' $limit";
 
 		$data = array(
@@ -93,7 +93,7 @@ class request_curl
 	public static function get_complains()
 	{
 		$args = array('user_id','note_bug','request_date','handle_user','handle_date');
-		$whr = "AND status='0'";
+		$whr = "AND status='0' AND type_complain='1'";
 
 		$data = array(
 			'object'	=> 'sobad_complain_bug',

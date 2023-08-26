@@ -46,7 +46,7 @@ class dashboard_it
 
 		$data = request_curl::get_handle_projects($user);
 		foreach ($data as $key => $val) {
-			if ($val['work_status'] == 4) {
+			if ($val['work_status'] == 4 || $val['work_status'] == 6) {
 				$status['actual'] += 1;
 			}
 		}
@@ -69,6 +69,23 @@ class dashboard_it
 		return isset($args[$type]) ? $args[$type] : '-';
 	}
 
+	public static function _conv_color_gantt($type = 0)
+	{
+		$args = array(
+			0	=> '#F4F4F4',
+			3	=> '#F62121',
+			4	=> 'linear-gradient(180deg, #D9D9D9 0%, #D1D1D1 0.01%, #B7B7B7 100%)',
+			8 	=> 'linear-gradient(180deg, #A430E1 0%, #C150F4 100%)',
+			52	=> 'linear-gradient(180deg, #71D0C8 0%, #86EEE5 100%)',
+			79	=> 'linear-gradient(126.69deg, #EFDCFF 28.65%, #E2BAFA 84.56%)',
+			171	=> 'linear-gradient(180deg, #FBD289 0%, #FACF7D 100%)',
+			177	=> 'linear-gradient(130.49deg, #15BA6B 26.97%, #23DA82 97.85%)',
+			185	=> 'linear-gradient(116.09deg, #009EF7 24.2%, #3FB8FC 49.93%, #6FCBFF 86.73%)'
+		);
+
+		return isset($args[$type]) ? $args[$type] : '#eee';
+	}
+
 	// ----------------------------------------------------------
 	// ----- Load Here ------------------------------------------
 	// ----------------------------------------------------------
@@ -78,6 +95,7 @@ class dashboard_it
 		$project = self::_project_team();
 		$progress = self::_progress_team();
 		$complain = self::_complain_bug();
+		$gantt_chart = self::_gantt_project();
 
 		$head = array(
 			array(
@@ -108,7 +126,15 @@ class dashboard_it
 			);
 		}
 
-		$data = ['head' => $head, 'body' => $body];
+		$gantt = array(
+			array(
+				'col' => 12,
+				'func' => 'project_gantt_chart',
+				'data' => $gantt_chart
+			)
+		);
+
+		$data = ['head' => $head, 'body' => $body, 'gantt' => $gantt];
 
 		return $data;
 	}
@@ -303,7 +329,7 @@ class dashboard_it
 
 		$args = array_merge($args, $work);
 
-		$total = request_curl::get_count_projects($args['ID'], "AND work_status IN (0,1,3)");
+		$total = request_curl::get_count_projects($args['ID'], "AND work_status IN (0,1,2,3,5)");
 		$data['total'] = $total;
 
 		$data['title'] = $args['meta_value_feat'];
@@ -323,6 +349,64 @@ class dashboard_it
 		$data['progress'] = '0%';
 
 		$data['worktime'] = $args['work_time'] . ' ' . self::_conv_work_day($args['work_day']);
+
+		return $data;
+	}
+
+	public static function _gantt_project()
+	{
+		$data = array();
+
+		$m = date('m');
+		$y = date('Y');
+		$date = date('Y-m-d');
+
+		$data['month'] = conv_month_id($m) . ' ' . $y;
+		$data['day_month'] = sum_days($m,$y);
+
+		$teams = request_curl::get_teams();
+		foreach ($teams as $key => $val) {
+			$member = self::_image_profile($val);
+
+			$data['user'][] = $member;
+
+			$where = "AND MONTH(start_date)='$m' AND YEAR(start_date)='$y'";
+			$detail = request_curl::get_handle_projects($val['ID'],$where);
+			foreach ($detail as $ky => $vl) {
+				$left = explode('-',$vl['start_date']);
+				$left = intval($left[2]);
+
+				$aleft = explode('-',$vl['start_actual']);
+				$aleft = intval($left[2]);
+
+				$status = 0;
+				if(in_array($vl['work_status'],array(1,2,5))){
+					$status = $val['ID'];
+				}else if($vl['work_status']==3){
+					$status = 3;
+				}else if(in_array($vl['work_status'],array(4,6))){
+					$status = 4;
+				}
+
+				$data['gantt'][] = array(
+					'top'	=> $key,
+					'left'	=> $left - 1,
+					'width'	=> $vl['work_time'],
+					'label'	=> $vl['meta_value_feat'],
+					'note'	=> self::_conv_work_type($vl['work_type']),
+					'color'	=> self::_conv_color_gantt($status),
+				);
+
+				// $data['gantt_actual'][] = array(
+				// 	'top'	=> $key,
+				// 	'left'	=> $aleft - 1,
+				// 	'width'	=> $vl['work_time'],
+				// 	'label'	=> $vl['meta_value_feat'],
+				// 	'note'	=> self::_conv_work_type($vl['work_type']),
+				// 	'color'	=> self::_conv_color_gantt($status),
+				// );
+			}
+		}
 
 		return $data;
 	}

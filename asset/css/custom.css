@@ -2,8 +2,12 @@
 	padding: 5px !important;
 }
 
+body.dashboard {
+    overflow-x: hidden;
+}
+
 .bag-profile-user{
-    background: #009EF7;
+    background: linear-gradient(180deg, #71D0C8 0%, #86EEE5 100%);
     border-radius: 50% !important;
     display: flex;
     justify-content: center;
@@ -19,11 +23,9 @@
 }
 
 .square-color {
-    height: 60px;
+    height: 40px;
     width: 40px;
     border-radius: 5px;
-    background: linear-gradient(126.69deg, #EFDCFF 28.65%, #E2BAFA 84.56%);
-    color: #9D28DD;
     font-size: 10px;
     padding: 10px 3px;
     text-align: center;
@@ -153,6 +155,7 @@ label.title-progress {
     font-size: 12px;
     font-weight: 600;
     color: #7b7b7b;
+    display: block;
 }
 
 .label-chart label {
@@ -171,7 +174,7 @@ label.title-progress {
     text-align: center;
     font-size: 20px;
     font-weight: 600;
-    padding-top: 3px;
+    padding-top: 5px;
 }
 
 .header-complain>span {
@@ -224,4 +227,155 @@ label.role-label {
 
 .date-project {
     padding: 0 0 10px 0;
+}
+
+.progress-project .progress-block{
+    width: 85%;
+    background: #edecf0;
+    height: 10px;
+    margin-top: 6px;
+    border-radius: 30px !important;
+    display: inline-block;
+}
+
+.progress-project .progress-block .progress-bar{
+    background: #1ba9f8;
+    height: 100%;
+    max-width: 100%;
+    min-width: 0%;
+    border-radius: 30px !important;
+}
+
+/* Gantt CSS Style */
+
+.gantt-header, .gantt-body {
+    border: 1px solid #F5F5F5;
+}
+
+.gantt-col.date-area{
+    border-left: 1px solid #F5F5F5;
+}
+
+.date-month-text,.member-area>.team-row{
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.gantt-col.member-area {
+    width: 10%;
+}
+
+.gantt-col {
+    display: inline-block;
+}
+
+.gantt-content-table {
+    padding: 15px;
+}
+
+.gantt-col.member-area {
+    width: 14%;
+}
+
+.gantt-col.date-area {
+    width: 85.7%;
+    position: relative;
+}
+
+.gantt-header .member-area label {
+    font-size: 16px;
+    color: #4D4D4DD6;
+    padding-left: 10px;
+}
+
+.team-row>.no-user {
+    padding-left: 10px;
+    width: 11%;
+    display: inline-block;
+    font-weight: 600;
+    color: #333;
+    vertical-align: top;
+    margin-top: 12px;
+}
+
+.team-row>.image-profile {
+    width: 85%;
+    display: inline-block;
+}
+
+.bag-month {
+    background-color: #eee;
+    position: absolute;
+    width: 99%;
+    border-radius: 15px;
+    top: 5px;
+    left: 0.5%;
+    padding: 4px;
+}
+
+.date-month-text, .date-month-day {
+    text-align: center;
+    position: relative;
+}
+
+label.day-month-text {
+    position: relative;
+}
+
+.date-month-day {
+    padding: 10px;
+}
+
+.date-month-text label {
+    display: block;
+    position: relative;
+    padding: 10px;
+    color: #333;
+    margin-bottom: 0px;
+}
+
+.team-row {
+    height: 50px;
+}
+
+.gantt-grid {
+    display: inline-block;
+    border: 1px solid #F5F5F5;
+    height: 50px;
+}
+
+.gantt-position {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.gantt-task {
+    height: 50px;
+    display: table-row;
+    width: 100%;
+}
+
+.gantt-grid {
+    display: table-cell;
+    border: 1px solid #F5F5F5;
+    height: 50px;
+}
+
+.gantt-chart {
+    position: absolute;
+    padding: 5px;
+    width: 100%;
+}
+
+.gantt-label-chart {
+    height: 24px;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.gantt-label-chart label {
+    width: 100%;
+    display: block;
 }
