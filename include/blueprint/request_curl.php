@@ -103,4 +103,14 @@ class request_curl
 
 		return self::send_curl($data);
 	}
+
+	public static function get_holiday_range($start='',$finish=''){
+		$data = array(
+			'object'	=> 'abs_holiday',
+			'func'		=> 'get_holiday_range',
+			'data'		=> array($start,$finish)
+		);
+
+		return self::send_curl($data);
+	}
 }

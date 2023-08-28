@@ -172,6 +172,13 @@ class dashboard_layout extends dashboard_template
     }
 
     public static function project_gantt_chart($data = []){
+        $sdate = strtotime($data['start_week']);
+        $wdt = 100 / $data['day_week'];
+
+        $today = strtotime($data['today']);
+        $tday = date('w',$today);
+
+        $today = ($tday * $wdt);
         ?>
             <div class="gantt-project-it box-content">
                 <div class="gantt-content-table">
@@ -185,13 +192,19 @@ class dashboard_layout extends dashboard_template
                                     <div class="bag-month">&nbsp;</div>
                                     <label><?= $data['month'] ;?></label>
                                 </div>
+                                <div class="date-week-year">
+                                    <div class="bag-month">&nbsp;</div>
+                                    <label>Week <?= $data['week_month'] ;?></label>
+                                </div>
                                 <div class="date-month-day">
                                     <div class="bag-month">&nbsp;</div>
+                                    <div class="bag-today" style="width:<?= $wdt;?>%;left: <?= $today ;?>%;">&nbsp;</div>
                                     <?php
-                                        $wdt = 100 / $data['day_month'];
-                                        for ($i=0; $i < $data['day_month']; $i++) { 
-                                            $no = $i + 1;
-                                            echo '<label class="day-month-text" style="width:'.$wdt.'%">' . $no . '</label>';
+                                        for ($i=0; $i < $data['day_week']; $i++) { 
+                                            $dt = $i == 0 ? $sdate : strtotime("+$i days",$sdate);
+                                            $dt = date('d',$dt);
+                                            
+                                            echo '<label class="day-month-text" style="width:'.$wdt.'%">' . $dt . '</label>';
                                         }
                                     ?>
                                 </div>
@@ -218,8 +231,9 @@ class dashboard_layout extends dashboard_template
                                     <?php
                                         foreach ($data['user'] as $key => $val) {
                                             echo '<div class="gantt-task">';
-                                            for ($i=0; $i < $data['day_month']; $i++) {
-                                                echo '<div class="gantt-grid" style="width:'.$wdt.'%">&nbsp;</div>';
+                                            for ($i=0; $i < $data['day_week']; $i++) {
+                                                $bg = $i == $tday ? 'background: #DCF2FF;' : '';
+                                                echo '<div class="gantt-grid" style="width:'.$wdt.'%;'.$bg.'">&nbsp;</div>';
                                             }
                                             echo '</div>';
                                         }
@@ -234,7 +248,8 @@ class dashboard_layout extends dashboard_template
                                         ?>
                                             <div class="gantt-chart" style="top:<?= $top ;?>px;left:<?= $left ;?>%;">
                                                 <div class="gantt-label-chart planning" style="width:<?= $width ;?>%;background: <?= $val['color'] ?>;">
-                                                    <span><?= $val['label'] ;?></span>
+                                                    <label><?= $val['label'] ;?></label>
+                                                    <span><?= $val['note'] ;?></span>
                                                 </div>
                                             </div>
                                         <?php

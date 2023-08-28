@@ -256,7 +256,7 @@ label.role-label {
     border-left: 1px solid #F5F5F5;
 }
 
-.date-month-text,.member-area>.team-row{
+.date-month-text,.date-week-year,.member-area>.team-row{
     border-bottom: 1px solid #F5F5F5;
 }
 
@@ -277,7 +277,7 @@ label.role-label {
 }
 
 .gantt-col.date-area {
-    width: 85.7%;
+    width: 85.6%;
     position: relative;
 }
 
@@ -312,7 +312,7 @@ label.role-label {
     padding: 4px;
 }
 
-.date-month-text, .date-month-day {
+.date-month-text, .date-month-day, .date-week-year {
     text-align: center;
     position: relative;
 }
@@ -325,12 +325,21 @@ label.day-month-text {
     padding: 10px;
 }
 
-.date-month-text label {
+.date-month-text label,
+.date-week-year label {
     display: block;
     position: relative;
     padding: 10px;
     color: #333;
     margin-bottom: 0px;
+}
+
+.bag-today {
+    position: absolute;
+    background: linear-gradient(116.09deg, #009EF7 24.2%, #3FB8FC 49.93%, #6FCBFF 86.73%);
+    padding: 4px;
+    border-radius: 15px;
+    top: 5px;
 }
 
 .team-row {
@@ -368,7 +377,7 @@ label.day-month-text {
 }
 
 .gantt-label-chart {
-    height: 24px;
+    height: 40px;
     border-radius: 20px;
     padding: 5px 15px;
     font-size: 12px;
@@ -378,4 +387,10 @@ label.day-month-text {
 .gantt-label-chart label {
     width: 100%;
     display: block;
+    margin-bottom: -3px;
+}
+
+.gantt-label-chart span{
+    font-size: 11px;
+    color: #777777;
 }

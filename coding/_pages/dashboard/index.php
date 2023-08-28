@@ -357,12 +357,23 @@ class dashboard_it
 	{
 		$data = array();
 
+		$d = date('d');
 		$m = date('m');
 		$y = date('Y');
 		$date = date('Y-m-d');
 
+		$week = day_week_range($date);
+		$sday = $week['start'];
+		$fday = $week['finish'];
+
+		$data['day'] = $d;
 		$data['month'] = conv_month_id($m) . ' ' . $y;
-		$data['day_month'] = sum_days($m,$y);
+		$data['today'] = $date;
+		
+		$data['week_month'] = $week['week'];
+		$data['day_week'] = 7;
+		$data['start_week'] = $week['start'];
+		$data['finish_week'] = $week['finish'];
 
 		$teams = request_curl::get_teams();
 		foreach ($teams as $key => $val) {
@@ -370,14 +381,14 @@ class dashboard_it
 
 			$data['user'][] = $member;
 
-			$where = "AND MONTH(start_date)='$m' AND YEAR(start_date)='$y'";
+			$where = "AND start_date BETWEEN '$sday' AND '$fday'";
 			$detail = request_curl::get_handle_projects($val['ID'],$where);
 			foreach ($detail as $ky => $vl) {
-				$left = explode('-',$vl['start_date']);
-				$left = intval($left[2]);
+				$left = strtotime($vl['start_date']);
+				$left = date('w',$left);
 
-				$aleft = explode('-',$vl['start_actual']);
-				$aleft = intval($left[2]);
+				$aleft = strtotime($vl['start_actual']);
+				$aleft = date('w',$aleft);
 
 				$status = 0;
 				if(in_array($vl['work_status'],array(1,2,5))){
@@ -390,21 +401,21 @@ class dashboard_it
 
 				$data['gantt'][] = array(
 					'top'	=> $key,
-					'left'	=> $left - 1,
+					'left'	=> $left,
 					'width'	=> $vl['work_time'],
 					'label'	=> $vl['meta_value_feat'],
 					'note'	=> self::_conv_work_type($vl['work_type']),
 					'color'	=> self::_conv_color_gantt($status),
 				);
 
-				// $data['gantt_actual'][] = array(
-				// 	'top'	=> $key,
-				// 	'left'	=> $aleft - 1,
-				// 	'width'	=> $vl['work_time'],
-				// 	'label'	=> $vl['meta_value_feat'],
-				// 	'note'	=> self::_conv_work_type($vl['work_type']),
-				// 	'color'	=> self::_conv_color_gantt($status),
-				// );
+				$data['gantt_actual'][] = array(
+					'top'	=> $key,
+					'left'	=> $aleft,
+					'width'	=> $vl['work_time'],
+					'label'	=> $vl['meta_value_feat'],
+					'note'	=> self::_conv_work_type($vl['work_type']),
+					'color'	=> self::_conv_color_gantt($status),
+				);
 			}
 		}
 
