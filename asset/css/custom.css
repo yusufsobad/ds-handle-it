@@ -394,3 +394,25 @@ label.day-month-text {
     font-size: 11px;
     color: #777777;
 }
+
+.button-directional {
+    position: absolute;
+    width: 100%;
+    top: 1px;
+}
+
+.button-directional>a.angle-left,
+.button-directional>a.angle-right {
+    position: absolute;
+    padding: 5px;
+    font-size: 20px;
+    color: #666;
+}
+
+.button-directional>a.angle-left{
+    left: 10px;
+}
+
+.button-directional>a.angle-right{
+    right: 10px;
+}

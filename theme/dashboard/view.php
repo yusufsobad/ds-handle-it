@@ -191,10 +191,18 @@ class dashboard_layout extends dashboard_template
                                 <div class="date-month-text">
                                     <div class="bag-month">&nbsp;</div>
                                     <label><?= $data['month'] ;?></label>
+                                    <div class="button-directional">
+                                        <a class="angle-left" href="javascript:void(0)"><i class="fa fa-angle-left">&nbsp;</i></a>
+                                        <a class="angle-right" href="javascript:void(0)"><i class="fa fa-angle-right">&nbsp;</i></a>
+                                    </div>
                                 </div>
                                 <div class="date-week-year">
                                     <div class="bag-month">&nbsp;</div>
                                     <label>Week <?= $data['week_month'] ;?></label>
+                                    <div class="button-directional">
+                                        <a class="angle-left" href="javascript:void(0)"><i class="fa fa-angle-left">&nbsp;</i></a>
+                                        <a class="angle-right" href="javascript:void(0)"><i class="fa fa-angle-right">&nbsp;</i></a>
+                                    </div>
                                 </div>
                                 <div class="date-month-day">
                                     <div class="bag-month">&nbsp;</div>
