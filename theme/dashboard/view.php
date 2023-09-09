@@ -18,10 +18,12 @@ class dashboard_layout extends dashboard_template
 					<div id='<?= $key ?>'class="row equal">
 					<?php
 							foreach ($value as $val) {
+                                $style = isset($val['height']) && $val['height']==false ? '' : 'style="height:22vw;';
+
 								$func = $val['func'];
 								$args = $val['data'];
 	
-								echo '<div id class="col-md-'.$val['col'].'">';
+								echo '<div id class="col-md-'.$val['col'].'" '.$style.'">';
 								if (is_callable(array(new self(), $func))) {
 									self::{$func}($args);
 								}
@@ -32,67 +34,94 @@ class dashboard_layout extends dashboard_template
 					<?php } ?>
 				</div>
 			<?php
+
+            self::_script();
     }
 
     public static function project_team($data = []){
     	?>
     		<div class="project-team-it box-content">
-    			<?php self::table_content($data) ?>
+    			<div class="row">
+                    <div class="col-md-6">
+                        <div class="title-daily-task"><?= $data['title'] ;?></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="calender-daily-task">
+                            <div class="icon-daily">
+                                <i class="fa fa-calendar">&nbsp;</i>
+                            </div>
+                            <div class="date-daily">
+                                <label id="time-daily"></label>
+                                <span id="date-daily"><?= $data['date'] ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-top: 20px;">
+                        <span>
+                            Total Squad:
+                            <div class="square-color bg-total-squad"><?= $data['active'] ?></div> /
+                            <div class="square-color bg-total-squad" style="background: linear-gradient(180deg, #71D0C8 0%, #86EEE5 100%);color: #fff;"><?= $data['total'] ?></div>
+                        </span>
+                    </div>
+                    <div class="col-md-12">
+                        <?php
+                            foreach ($data['team'] as $key => $val) {
+                                $color = $val['active'] == 1 ? '' : 'background: #BEBEBE;';
+                                self::squad_user($val,$color);
+                            }
+                        ?>
+                    </div>
+                </div>
     		</div>
     	<?php
     }
 
     public static function progress_team($data = []){
+        $job = $data['department'];
+        $unsc = $data['unschedule'];
+
     	?>
     		<div class="progress-team-it box-content">
-    			<div class="row">
-    				<div class="col-md-12">
-    					<label class="title-progress"><?= $data['title'] ;?></label>
-    				</div>
-    				<div class="col-md-12">
-                        <?php
-                            $xvalue = $yvalue = $color = [];
-                            foreach ($data['label'] as $key => $val) {
-                                $xvalue[] = '"'.$val['label'].'"';
-                                $yvalue[] = $val['qty'];
-                                $color[] = '"'.$val['color'].'"';
-                            }
-
-                            $xvalue = implode(',', $xvalue);
-                            $yvalue = implode(',', $yvalue);
-                            $color = implode(',', $color);
-                        ?>
-
-    					<canvas id="chart-progress"></canvas>
-    					<script type="text/javascript">
-    						var xValues = [<?= $xvalue;?>];
-							var yValues = [<?= $yvalue;?>];
-							var barColors = [<?= $color;?>];
-
-    						new Chart("chart-progress", {
-							  type: "doughnut",
-							  data: {
-							    labels: xValues,
-							    datasets: [{
-							      backgroundColor: barColors,
-							      data: yValues
-							    }]
-							  },
-							  options: {
-						         legend: {
-						            display: false
-						         },
-						    	}
-							});
-    					</script>
-    				</div>
-                    <div class="col-md-12">
-                        <div class="label-progress">
-                            <?php
-                                foreach ($data['label'] as $key => $val) {
-                                    self::label_progress($val);
-                                }
-                            ?>
+    			<div class="row" style="height: 100%;">
+                    <div class="col-md-6" style="border-right: 1px solid #c4c4c4;height: 100%;">
+                        <div class="box-row-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="title-progress"><?= $job['title'] ;?></label>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="job-active">
+                                        <table class="table-active-job" style="width: 100%;">
+                                            <tr>
+                                                <td style="width:50%;">
+                                                    <span>Job Active:</span>
+                                                </td>
+                                                <td style="width:50%;font-size: 45px;text-align: center;">
+                                                    <label><?= $job['total'] ;?></label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="label-progress">
+                                        <?php
+                                            foreach ($job['label'] as $key => $val) {
+                                                self::label_progress($val);
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="height: 100%;">
+                        <div class="header-unschedule">
+                            <label class="title-progress unschedule"><?= $unsc['title'] ;?></label>
+                            <div class="square-color" style="color: #555555;background-color: #D9D9D9;font-size: 17px;font-weight: 600;"><?= $unsc['total'] ;?></div>
+                        </div>
+                        <div class="unschedule-job">
+                            <?php self::table_content($unsc['table']) ?>
                         </div>
                     </div>
     			</div>
@@ -112,7 +141,9 @@ class dashboard_layout extends dashboard_template
     					<div class="square-color" style="color: #15BA6B;background-color: #E1FFF1;"><?= $data['handle'] ;?></div>
     				</span>
     			</div>
-    			<?php self::table_content($data['table']) ?>
+                <div class="table-complain">
+                    <?php self::table_content($data['table']) ?>
+                </div>
     		</div>
     	<?php
     }
@@ -124,49 +155,76 @@ class dashboard_layout extends dashboard_template
     				<label><?= $data['total'] ;?></label>
     			</div>
 
-    			<?php self::image_profile($data) ;?>
-    			
-    			<label class="task-label"><?= $data['title'] ;?></label>
-    			<label class="role-label"><?= $data['jobdesk'] ;?></label>
-    			
-    			<div class="date-project">
-    				<div class="square-color" style="background: linear-gradient(126.69deg, #EFDCFF 28.65%, #E2BAFA 84.56%);color: #9D28DD;">
-    					<label class="plan">PLAN</label>
-    				</div>
-    				<div class="square-color start-date">
-    					<span>Start Date</span>
-    					<label><?= $data['start_date'] ;?></label>
-    				</div>
-    				<div class="square-color finish-date">
-    					<span>Finish Date</span>
-    					<label><?= $data['finish_date'] ;?></label>
-    				</div>
-    			</div>
-
-    			<div class="date-project">
-    				<div class="square-color" style="background: linear-gradient(126.69deg, #EFDCFF 28.65%, #E2BAFA 84.56%);color: #9D28DD;">
-    					<label class="plan">ACT</label>
-    				</div>
-    				<div class="square-color start-date">
-    					<span>Start Date</span>
-    					<label><?= $data['start_actual'] ;?></label>
-    				</div>
-    				<div class="square-color finish-date">
-    					<span>Finish Date</span>
-    					<label><?= $data['finish_actual'] ;?></label>
-    				</div>
-    			</div>
-
-    			<div class="progress-project">
-					<div class="progress-block">
-						<div class="progress-bar" style="width: <?= $data['progress'] ;?>"></div>
-					</div>
-					<label><?= $data['progress'] ;?></label>
-    			</div>
-
-    			<div class="workday-project">
-    				<p style="text-align: center;">Work Day: <strong><?= $data['worktime'] ;?></strong></p>
-    			</div>
+                <div class="profile-user-project">
+                    <?php self::image_profile($data) ;?>
+                </div>
+    			<div class="last-project">
+                    <span>Last Job &nbsp;&nbsp;: <?= $data['date_active'] ;?></span>
+                    <span>Kum BLC : <?= $data['balance'] ;?></span>
+                </div>
+                <div class="detail-project">
+                    <?php foreach ($data['detail'] as $key => $val) :?>
+                        <div class="box-content-project">
+                            <div class="box-project">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="detail-title-project">
+                                            <label><?= $val['title'] ;?></label>
+                                        </div>
+                                        <div class="detail-type-project">
+                                            <span><?= $val['type'] ;?></span>
+                                        </div>
+                                        <div class="progress-project">
+                                            <div class="progress-block">
+                                                <div class="progress-bar" style="width: <?= $val['progress'] ;?>"></div>
+                                            </div>
+                                            <label><?= $val['progress'] ;?></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="row">
+                                            <div class="col-md-7" style="padding: 0px !important;">
+                                                <div class="box-date-project">
+                                                    <div class="bg-box-date planning">
+                                                        <span>&nbsp;</span>
+                                                    </div>
+                                                    <div class="title-box-date">
+                                                        <span><?= $val['planning'] ;?></span>
+                                                    </div>
+                                                </div>
+                                                <div class="box-date-project">
+                                                    <div class="bg-box-date actual">
+                                                        <span>&nbsp;</span>
+                                                    </div>
+                                                    <div class="title-box-date">
+                                                        <span><?= $val['actual'] ;?></span>
+                                                    </div>
+                                                </div>
+                                                <div class="box-date-project">
+                                                    <div class="bg-box-date balance">
+                                                        <span>&nbsp;</span>
+                                                    </div>
+                                                    <div class="title-box-date">
+                                                        <span><?= $val['balance'] ;?></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="square-color" style="width: 100%;height: 100%;padding: 8px;background: #F3DDFF;color: #9D28DD;">
+                                                    <label><?= $val['worktime'];?></label>
+                                                    <span>day</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-1" style="padding: 0px !important;">
+                                                <div class="circle-color" style="background:<?= $val['status'] ;?>;margin-top: 24px;">&nbsp;</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach;?>
+                </div>
     		</div>
     	<?php
     }
@@ -254,8 +312,24 @@ class dashboard_layout extends dashboard_template
 
                                         $width = empty($val['width']) ? 0 : $val['width'] * $wdt;
                                         ?>
-                                            <div class="gantt-chart" style="top:<?= $top ;?>px;left:<?= $left ;?>%;">
-                                                <div class="gantt-label-chart planning" style="width:<?= $width ;?>%;background: <?= $val['color'] ?>;">
+                                            <div class="gantt-chart" style="top:<?= $top - 5;?>px;left:<?= $left ;?>%;">
+                                                <div class="gantt-planning-chart planning" style="width:<?= $width ;?>%;background: <?= $val['color'] ?>;">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        <?php
+                                    }
+                                ?>
+
+                                <?php
+                                    foreach ($data['gantt_actual'] as $key => $val) {
+                                        $top = empty($val['top']) ? 0 : $val['top'] * 50;
+                                        $left = empty($val['left']) ? 0 : $val['left'] * $wdt;
+
+                                        $width = empty($val['width']) ? 0 : $val['width'] * $wdt;
+                                        ?>
+                                            <div class="gantt-chart" style="top:<?= $top + 4 ;?>px;left:<?= $left ;?>%;">
+                                                <div class="gantt-label-chart actual" style="width:<?= $width ;?>%;background: <?= $val['color'] ?>;">
                                                     <label><?= $val['label'] ;?></label>
                                                     <span><?= $val['note'] ;?></span>
                                                 </div>
@@ -268,6 +342,38 @@ class dashboard_layout extends dashboard_template
                     </div>
                 </div>
             </div>
+        <?php
+    }
+
+    public static function _script(){
+        ?>
+            <script type="text/javascript">
+                setInterval(time_absen,1000);
+
+                function time_absen(){
+                    var j;var m; var d;
+                    var waktu = new Date();
+
+                    j = waktu.getHours().toString();
+                    if(j.length<2){
+                        j = '0'+j;
+                    }
+
+                    m = waktu.getMinutes().toString();
+                    if(m.length<2){
+                        m = '0'+m;
+                    }
+/*
+                    d = waktu.getSeconds().toString();
+                    if(d.length<2){
+                        d = '0'+d;
+                    }
+*/
+                    var wkt = j+':'+m;
+ 
+                    $('#time-daily').html(wkt);
+                }
+            </script>
         <?php
     }
 }

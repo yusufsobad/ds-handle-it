@@ -49,6 +49,18 @@ class request_curl
 		return self::send_curl($data);
 	}
 
+	public static function check_presensi($user=0)
+	{
+		$date = date('Y-m-d');
+		$data = array(
+			'object'	=> 'abs_user_log',
+			'func'		=> '_check_presensi',
+			'data'		=> array($user,$date)
+		);
+
+		return self::send_curl($data);
+	}
+
 	public static function get_team_projects()
 	{
 		$args = array('ID','status');
@@ -62,9 +74,22 @@ class request_curl
 		return self::send_curl($data);
 	}
 
+	public static function get_feature_projects($where='')
+	{
+		$args = array('ID','feature_id','notes','status');
+
+		$data = array(
+			'object'	=> 'sobad_workflow',
+			'func'		=> 'get_all',
+			'data'		=> array($args,$where)
+		);
+
+		return self::send_curl($data);
+	}
+
 	public static function get_handle_projects($user=0, $limit = '')
 	{
-		$args = array('workflow_id','work_type','work_time','work_day','work_status','start_date','finish_date','start_actual','finish_actual');
+		$args = array('workflow_id','work_type','work_time','work_day','work_status','start_date','finish_date','start_actual','finish_actual','work_progress');
 		$whr = "AND user_id='$user' $limit";
 
 		$data = array(
@@ -92,7 +117,7 @@ class request_curl
 
 	public static function get_complains()
 	{
-		$args = array('user_id','note_bug','request_date','handle_user','handle_date');
+		$args = array('role_id','feature_id','user_id','note_bug','request_date','handle_user','handle_date');
 		$whr = "AND status='0' AND type_complain='1'";
 
 		$data = array(

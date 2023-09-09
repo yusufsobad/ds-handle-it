@@ -15,6 +15,28 @@ body.dashboard {
     overflow: hidden;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #8023B4;
+    border-radius: 20px
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #8023B4;
+}
+
 @media (min-width: 768px) {
     .row.equal {
       display: flex;
@@ -29,6 +51,13 @@ body.dashboard {
     font-size: 10px;
     padding: 10px 3px;
     text-align: center;
+    display: inline-block;
+}
+
+.circle-color {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
     display: inline-block;
 }
 
@@ -76,7 +105,8 @@ table.table-content {
 
 td.body-team {
     padding: 1px 3px;
-    font-size: 13px;
+    font-size: 12px;
+    vertical-align: top;
 }
 
 .name-profile {
@@ -102,6 +132,15 @@ td.body-team {
     background-color: #FBFBFB;
 }
 
+.title-daily-task {
+    font-size: 35px;
+    line-height: 1;
+}
+
+.title-daily-task label {
+    font-size: 40px;
+}
+
 .box-content {
 	border-radius: 20px;
 	padding: 15px 20px;
@@ -110,8 +149,16 @@ td.body-team {
     height: 100%;
 }
 
+.job-active {
+    background: linear-gradient(116.09deg, #009EF7 24.2%, #3FB8FC 49.93%, #6FCBFF 86.73%);
+    border-radius: 15px;
+    padding: 15px 13px;
+    color: #fff;
+}
+
 .project-team-it.box-content {
-    background: linear-gradient(126.69deg, #EFDCFF 28.65%, #E2BAFA 84.56%);
+    background: linear-gradient(60.19deg, #EF35FF 25.25%, #D83DFF 49.88%, #B407DF 87.54%);
+    color: #fff;
 }
 
 .project-team-it .table-content thead tr {
@@ -159,7 +206,7 @@ label.title-progress {
 }
 
 .label-chart label {
-    font-size: 17px;
+    font-size: 15px;
 }
 
 .header-complain {
@@ -167,7 +214,7 @@ label.title-progress {
 }
 
 .header-complain label.title-progress {
-    width: 60%;
+    width: 40%;
 }
 
 .header-complain .square-color {
@@ -183,6 +230,70 @@ label.title-progress {
     color: #7b7b7b;
 }
 
+.calender-daily-task {
+    background: linear-gradient(108.1deg, #F4E7FF 37.68%, #E2BAFA 86.58%);
+    color: #9D28DD !important;
+    border-radius: 12px;
+}
+
+.icon-daily {
+    width: 28%;
+    font-size: 35px;
+    display: inline-block;
+    background: linear-gradient(127.14deg, #F6ECFF 28.45%, #E2BAFA 76.44%);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.date-daily {
+    width: 67%;
+    float: right;
+    padding-top: 5px;
+}
+
+.bg-total-squad{
+    background: #FFFFFF;
+    width: 22px;
+    height: 22px;
+    color: #9D28DD;
+    padding: 3px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+label#time-daily {
+    display: block;
+    text-align: center;
+    font-size: 27px;
+    margin-bottom: -11px;
+}
+
+span#date-daily {
+    font-size: 12px;
+}
+
+.image-profile-squad {
+    width: 15%;
+    display: inline-block;
+    padding: 0px 3px;
+}
+
+.image-profile-squad .bag-profile-user {
+    border-radius: 8px !important;
+}
+
+.image-profile-squad label {
+    font-weight: unset;
+    text-align: center;
+    width: 100%;
+}
+
+.unschedule-job,
+.table-complain {
+    overflow-y: auto;
+    height: 85%;
+}
+
 .complain-bug-it .table-content th.head-team {
     color: #A5A5A5;
     font-size: 12px;
@@ -196,6 +307,10 @@ label.title-progress {
 
 .complain-bug-it .table-content td.body-team {
     font-weight: 600;
+}
+
+.project-user-it.box-content {
+    background: radial-gradient(275.19% 275.19% at 47.5% 15.84%, rgba(205, 113, 255, 0) 18.46%, rgba(157, 43, 219, 0.66) 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
 }
 
 .project-total {
@@ -225,8 +340,60 @@ label.role-label {
     display: block;
 }
 
+.last-project {
+    width: 32%;
+    float: right;
+    padding-top: 5px;
+}
+
+.last-project>span {
+    display: block;
+    font-size: 11px;
+}
+
+.profile-user-project {
+    width: 55%;
+    display: inline-block;
+}
+
+.detail-project {
+    overflow-y: auto;
+    height: 72%;
+}
+
+.detail-title-project {
+    font-size: 13px;
+}
+
+.detail-title-project>label {
+    margin-bottom: 0px;
+}
+
+.detail-type-project>span {
+    padding: 2px 7px;
+    border: 1px solid #C4C4C4;
+    font-size: 11px;
+    border-radius: 8px;
+}
+
+.box-content-project {
+    padding: 5px;
+}
+
+.box-project {
+    box-shadow: 0px 4px 13px 1px #0000000D;
+    border-radius: 10px;
+    background: #fff;
+    padding: 4px 7px;
+}
+
 .date-project {
     padding: 0 0 10px 0;
+}
+
+.label-progress>.label-chart {
+    width: 25%;
+    display: table-cell;
 }
 
 .progress-project .progress-block{
@@ -244,6 +411,40 @@ label.role-label {
     max-width: 100%;
     min-width: 0%;
     border-radius: 30px !important;
+}
+
+.progress-project label {
+    font-weight: unset;
+}
+
+.bg-box-date.planning{
+    background: linear-gradient(180deg, #DE5DFE 0%, #C25DFA 47.92%, #9D28DD 100%);
+}
+
+.bg-box-date.actual{
+    background: linear-gradient(116.09deg, #009EF7 24.2%, #3FB8FC 49.93%, #6FCBFF 86.73%);
+}
+
+.bg-box-date.balance{
+    background: linear-gradient(123.22deg, #FF1111 18.34%, #FF4B4B 53.09%, #FF772B 85.06%);
+}
+
+.bg-box-date {
+    width: 12%;
+    display: inline-block;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.title-box-date {
+    display: inline-block;
+    font-size: 10px;
+}
+
+.square-color>label {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: -5px;
 }
 
 /* Gantt CSS Style */
@@ -376,23 +577,31 @@ label.day-month-text {
     width: 100%;
 }
 
+.gantt-planning-chart {
+    height: 5px;
+    font-size: 8px;
+}
+
 .gantt-label-chart {
-    height: 40px;
+    height: 35px;
     border-radius: 20px;
     padding: 5px 15px;
-    font-size: 12px;
+    font-size: 11px;
     display: inline-block;
 }
 
 .gantt-label-chart label {
     width: 100%;
     display: block;
-    margin-bottom: -3px;
+    margin-bottom: -2px;
 }
 
-.gantt-label-chart span{
-    font-size: 11px;
+.gantt-label-chart span {
+    font-size: 10px;
     color: #777777;
+    background: #fff;
+    padding: 1px 5px;
+    border-radius: 10px;
 }
 
 .button-directional {

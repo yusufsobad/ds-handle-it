@@ -86,6 +86,28 @@ class dashboard_it
 		return isset($args[$type]) ? $args[$type] : '#eee';
 	}
 
+	public static function format_date($date=''){
+		if(empty($date) || $date == '0000-00-00' || $date == '1970-01-01'){
+			return '-';
+		}
+
+		$date = strtotime($date);
+		$date = date('d M Y',$date);
+
+		return $date;
+	}
+
+	public static function format_date_month($date=''){
+		if(empty($date) || $date == '0000-00-00' || $date == '1970-01-01'){
+			return '';
+		}
+
+		$date = strtotime($date);
+		$date = date('d M',$date);
+
+		return $date;
+	}
+
 	// ----------------------------------------------------------
 	// ----- Load Here ------------------------------------------
 	// ----------------------------------------------------------
@@ -104,12 +126,12 @@ class dashboard_it
 				'data' => $project
 			),
 			array(
-				'col' => 2,
+				'col' => 4,
 				'func' => 'progress_team',
 				'data' => $progress
 			),
 			array(
-				'col' => 6,
+				'col' => 4,
 				'func' => 'complain_bug',
 				'data' => $complain
 			)
@@ -120,7 +142,7 @@ class dashboard_it
 			$user = self::_project_user($val);
 
 			$body[] = array(
-				'col' => 2,
+				'col' => 4,
 				'func' => 'project_user',
 				'data' => $user
 			);
@@ -128,9 +150,10 @@ class dashboard_it
 
 		$gantt = array(
 			array(
-				'col' => 12,
-				'func' => 'project_gantt_chart',
-				'data' => $gantt_chart
+				'height'=> false,
+				'col' 	=> 12,
+				'func' 	=> 'project_gantt_chart',
+				'data' 	=> $gantt_chart
 			)
 		);
 
@@ -142,96 +165,125 @@ class dashboard_it
 	protected static function _project_team()
 	{
 		$data = array();
-		$thead = array(
-			'No.' => array('8%', 'center'),
-			'Member' => array('auto', 'left'),
-			'Actual' => array('15%', 'center'),
-			'Schedule' => array('18%', 'center'),
-			'Ach. %' => array('15%', 'center'),
-		);
-
-		$data['thead'] = array();
-		$data['tbody'] = array();
-
-		foreach ($thead as $key => $val) {
-			$data['thead'][] = array(
-				'width' => $val[0],
-				'align' => $val[1],
-				'label' => $key
-			);
-		}
-
-		$no = 1;
 		$teams = request_curl::get_teams();
-		foreach ($teams as $key => $val) {
-			$member = self::_image_profile($val);
-			$handle = self::get_status_project($val['ID']);
 
-			$data['tbody'][] = array(
-				'no' => array(
-					'center',
-					$no++ . '.'
-				),
-				'member' => array(
-					'left',
-					$member
-				),
-				'act' => array(
-					'center',
-					$handle['actual']
-				),
-				'sch' => array(
-					'center',
-					$handle['schedule']
-				),
-				'ach' => array(
-					'center',
-					$handle['achievment'] . '%'
-				)
+		$now = date('Y-m-d');
+		$active = 0;
+		foreach ($teams as $key => $val) {
+			$status = request_curl::check_presensi($val['ID']);
+			$status = $status == 1 ? 1 : 0;
+
+			$data['team'][] = array(
+				'url' 		=> self::$path_image,
+				'name' 		=> $val['_nickname'],
+				'picture' 	=> $val['notes_pict'],
+				'active'	=> $status
 			);
+
+			$active += $status;
 		}
+
+		$data['active'] = $active;
+		$data['total'] = count($teams);
+		$data['date'] = format_date_id($now);
+		$data['title'] = '<span>Daily Task<br><label>IT Dept</label></span>';
 
 		return $data;
 	}
 
 	protected static function _progress_team()
 	{
-		$data = array();
+		$un_job = $job = $table = array();
 
-		$un_sch = $sch = $cmp = $total = 0;
-		$data = request_curl::get_team_projects();
-		foreach ($data as $key => $val) {
-			if ($val['status'] == -1) {
+		$pre = $act = $hold = $rev = $un_sch = $comp = $total = 0;
+		$project = request_curl::get_team_projects();
+		foreach ($project as $key => $val) {
+			if ($val['status'] == 0) {
+				$pre += 1;
+			} else if ($val['status'] == 7) {
+				$rev += 1;
+			} else if ($val['status'] == 3) {
+				$hold += 1;
+			} else if ($val['status'] == -1) {
 				$un_sch += 1;
 			} else if ($val['status'] == 6) {
-				$cmp += 1;
+				$comp += 1;
 			} else {
-				$sch += 1;
+				$act += 1;
 			}
 		}
 
-		$total = count($data);
+		$total = $pre + $rev + $hold + $act;
 
-		$data['title'] = 'Progress<br>Department Job';
-		$data['label'] = array(
+		$job['title'] = 'Department Job';
+		$job['total'] = $total;
+		$job['label'] = array(
 			array(
-				'label' => 'Unschedule',
-				'color' => '#EDECF0',
-				'qty' => $un_sch
+				'label' => 'Prepare',
+				'color' => '#D9D9D9',
+				'qty' => $pre
 			),
 			array(
-				'label' => 'Scheduled',
-				'color' => '#FBD289',
-				'qty' => $sch
+				'label' => 'Active',
+				'color' => '#15BA6B',
+				'qty' => $act
 			),
 			array(
-				'label' => 'Completed',
-				'color' => '#3FB8FC',
-				'qty' => $cmp
+				'label' => 'Hold',
+				'color' => '#F62121',
+				'qty' => $hold
+			),
+			array(
+				'label' => 'Revisi',
+				'color' => '#FAB05C',
+				'qty' => $rev
 			)
 		);
 
-		return $data;
+		// Unschedule Job
+		$thead = array(
+			'No.' => array('15%', 'center'),
+			'Job Title' => array('auto', 'left')
+		);
+
+		$table['thead'] = array();
+		$table['tbody'] = array();
+
+		foreach ($thead as $key => $val) {
+			$table['thead'][] = array(
+				'width' => $val[0],
+				'align' => $val[1],
+				'label' => $key
+			);
+		}
+
+		$complain = request_curl::get_complains();
+		$total = count($complain);
+
+		$no = 1;
+		foreach ($complain as $key => $val) {
+			$feature = '<strong>' . $val['meta_value_feat'] . '</strong> - ' . $val['meta_value_role'];
+
+			$table['tbody'][] = array(
+				'no' => array(
+					'center',
+					$no++ . '.'
+				),
+				'job' => array(
+					'left',
+					$feature
+				),
+			);
+		}
+
+		$un_job['title'] = 'Unschedule Job';
+		$un_job['total'] = $un_sch;
+		$un_job['table'] = $table;
+
+		return array(
+			'department'	=> $job,
+			'unschedule'	=> $un_job
+		);
 	}
 
 	protected static function _complain_bug()
@@ -242,10 +294,10 @@ class dashboard_it
 		$thead = array(
 			'No.' => array('5%', 'center'),
 			'Complain' => array('auto', 'left'),
-			'Date' => array('15%', 'left'),
-			'User' => array('12%', 'left'),
-			'Repair' => array('15%', 'left'),
-			'PIC' => array('12%', 'left'),
+			'Date' => array('17%', 'left'),
+			'User' => array('8%', 'left'),
+			'Repair' => array('17%', 'left'),
+			'PIC' => array('8%', 'left'),
 		);
 
 		$table['thead'] = array();
@@ -266,12 +318,10 @@ class dashboard_it
 		foreach ($complain as $key => $val) {
 			$repair += $val['handle_date'] == '0000-00-00' || $val['handle_date'] == '1970-01-01' ? 0 : 1;
 
-			if ($no > 5) {
-				continue;
-			}
-
 			$user = self::get_profile_user($val['user_id']);
 			$pic = self::get_profile_user($val['handle_user']);
+
+			$feature = '<strong>' . $val['meta_value_feat'] . '</strong> - ' . $val['meta_value_role'];
 
 			$table['tbody'][] = array(
 				'no' => array(
@@ -280,11 +330,11 @@ class dashboard_it
 				),
 				'compalin' => array(
 					'left',
-					$val['note_bug']
+					$feature
 				),
 				'date' => array(
 					'left',
-					format_date_id($val['request_date'])
+					self::format_date($val['request_date'])
 				),
 				'user' => array(
 					'left',
@@ -292,7 +342,7 @@ class dashboard_it
 				),
 				'repair' => array(
 					'left',
-					format_date_id($val['handle_date'])
+					self::format_date($val['handle_date'])
 				),
 				'pic' => array(
 					'left',
@@ -329,27 +379,52 @@ class dashboard_it
 
 		$args = array_merge($args, $work);
 
-		$total = request_curl::get_count_projects($args['ID'], "AND work_status IN (0,1,2,3,5)");
-		$data['total'] = $total;
-
-		$data['title'] = $args['meta_value_feat'];
-		$data['jobdesk'] = self::_conv_work_type($args['work_type']);
+		$handle = request_curl::get_handle_projects($args['ID'], "AND work_status IN (0,1,2,3,5)");
+		$data['total'] = count($handle);
 
 		$data['url'] = self::$path_image;
 		$data['name'] = $args['_nickname'];
 		$data['picture'] = empty($args['notes_pict']) ? 'no-profile.jpg' : $args['notes_pict'];
 		$data['jobtitle'] = $args['meta_value_divi'];
 
-		$data['start_date'] = format_date_id($args['start_date']);
-		$data['finish_date'] = format_date_id($args['finish_date']);
-		$data['start_actual'] = format_date_id($args['start_actual']);
-		$data['finish_actual'] = format_date_id($args['finish_actual']);
+		$data['date_active'] = self::format_date_month($args['finish_date']);
+		$data['balance'] = 0;
 
-		$data['progress_width'] = '0%';
-		$data['progress'] = '0%';
+		$detail = array();
+		foreach ($handle as $key => $val) {
+			$title = '<strong>' . $val['meta_value_feat'] . '</strong> - ' . $val['meta_value_role'];
+			$plan = self::format_date_month($val['start_date']) .'-' . self::format_date_month($val['finish_date']);
 
-		$data['worktime'] = $args['work_time'] . ' ' . self::_conv_work_day($args['work_day']);
+			$actual = self::format_date_month($val['start_actual']) .'-' . self::format_date_month($val['finish_actual']);
 
+			$progress = isset($val['work_progress']) ? $val['work_progress'] : 0;
+			$balance = 0;
+			$worktime = $val['work_time'];
+
+			$status = '#D9D9D9';
+			if($val['work_status'] == 1){
+				$status = '#15BA6B';
+			}else if($val['work_status'] == 2){
+				$status = '#15BA6B';
+			}else if($val['work_status'] == 3){
+				$status = '#F62121';
+			}else if($val['work_status'] == 5){
+				$status = '#FAB05C';
+			}
+
+			$detail[] = array(
+				'title'			=> $title,
+				'type'			=> self::_conv_work_type($val['work_type']),
+				'progress' 		=> $progress . '%',
+				'planning'		=> $plan,
+				'actual'		=> $actual,
+				'balance'		=> $balance,
+				'worktime'		=> $worktime,
+				'status'		=> $status
+			);
+		}
+
+		$data['detail'] = $detail;
 		return $data;
 	}
 
@@ -381,14 +456,9 @@ class dashboard_it
 
 			$data['user'][] = $member;
 
-			$where = "AND start_date BETWEEN '$sday' AND '$fday'";
+			$where = "AND ( (start_date BETWEEN '$sday' AND '$fday') OR (start_actual BETWEEN '$sday' AND '$fday') )";
 			$detail = request_curl::get_handle_projects($val['ID'],$where);
 			foreach ($detail as $ky => $vl) {
-				$left = strtotime($vl['start_date']);
-				$left = date('w',$left);
-
-				$aleft = strtotime($vl['start_actual']);
-				$aleft = date('w',$aleft);
 
 				$status = 0;
 				if(in_array($vl['work_status'],array(1,2,5))){
@@ -399,23 +469,48 @@ class dashboard_it
 					$status = 4;
 				}
 
-				$data['gantt'][] = array(
-					'top'	=> $key,
-					'left'	=> $left,
-					'width'	=> $vl['work_time'],
-					'label'	=> $vl['meta_value_feat'],
-					'note'	=> self::_conv_work_type($vl['work_type']),
-					'color'	=> self::_conv_color_gantt($status),
-				);
+				if($vl['start_date'] >= $sday){
+					$vl['start_date'] = $vl['start_date'] < $sday ? $sday : $vl['start_date'];
+					$vl['finish_date'] = $vl['finish_date'] > $fday ? $fday : $vl['finish_date'];
 
-				$data['gantt_actual'][] = array(
-					'top'	=> $key,
-					'left'	=> $aleft,
-					'width'	=> $vl['work_time'],
-					'label'	=> $vl['meta_value_feat'],
-					'note'	=> self::_conv_work_type($vl['work_type']),
-					'color'	=> self::_conv_color_gantt($status),
-				);
+					$worktime = _conv_date($vl['start_date'],$vl['finish_date']);
+
+					$left = strtotime($vl['start_date']);
+					$left = date('w',$left);
+
+					$data['gantt'][] = array(
+						'top'	=> $key,
+						'left'	=> $left,
+						'width'	=> $worktime + 1,
+						'label'	=> $vl['meta_value_feat'],
+						'note'	=> self::_conv_work_type($vl['work_type']),
+						'color'	=> self::_conv_color_gantt($status),
+					);
+				}
+
+				if($vl['start_actual']=='0000-00-00'){
+					continue;
+				}
+
+				if($vl['start_actual'] >= $sday || $vl['finish_actual'] <= $fday){
+					$vl['start_actual'] = $vl['start_actual'] < $sday ? $sday : $vl['start_actual'];
+					$vl['finish_actual'] = $vl['finish_actual'] > $fday ? $fday : $vl['finish_actual'];
+
+					$aleft = strtotime($vl['start_actual']);
+					$aleft = date('w',$aleft);
+
+					$fns_act = $vl['finish_actual'] == '0000-00-00' ? date('Y-m-d') : $vl['finish_actual'];
+					$worktime = _conv_date($vl['start_actual'],$fns_act);
+
+					$data['gantt_actual'][] = array(
+						'top'	=> $key,
+						'left'	=> $aleft,
+						'width'	=> $worktime + 1,
+						'label'	=> $vl['meta_value_feat'],
+						'note'	=> self::_conv_work_type($vl['work_type']),
+						'color'	=> self::_conv_color_gantt($status),
+					);
+				}
 			}
 		}
 

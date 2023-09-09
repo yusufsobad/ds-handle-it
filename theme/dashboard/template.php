@@ -8,8 +8,23 @@ abstract class dashboard_template
 		?>
 			<div class="label-chart">
 				<span><?= $data['label'] ;?></span>
-				<div class="square-color" style="background-color: <?= $data['color'] ;?>;"></div>
+				<div class="circle-color" style="background-color: <?= $data['color'] ;?>;"></div>
 				<label><?= $data['qty'] ;?></label>
+			</div>
+		<?php
+	}
+
+	public static function squad_user($data = [],$style=''){
+		$src = $data['url'] . '/' . $data['picture'];
+
+		?>
+			<div class="image-profile-squad">
+				<div style="display: grid;justify-content: space-between;text-align:center;">
+                    <div class="bag-profile-user" style="<?= $style ;?>">
+                        <img src="<?= $src ;?>" style="width:100%;">
+                    </div>
+                </div>
+				<label><?= $data['name'];?></label>
 			</div>
 		<?php
 	}
@@ -19,18 +34,12 @@ abstract class dashboard_template
 
 		?>
 			<div class="image-profile">
-				<div class="row">
-					<div class="col-md-4">
-						<div style="display: grid;justify-content: space-between;text-align:center;">
-		                    <div class="bag-profile-user">
-		                        <img src="<?= $src ;?>" style="width:100%;">
-		                    </div>
-		                </div>
-					</div>
-					<div class="col-md-8">
-						<label><?= $data['name'];?></label>
-					</div>
-				</div>
+				<div style="display: grid;justify-content: space-between;text-align:center;">
+                    <div class="bag-profile-user">
+                        <img src="<?= $src ;?>" style="width:100%;">
+                    </div>
+                </div>
+                <label style="font-size: 10px;"><?= $data['name'];?></label>
 			</div>
 		<?php
 	}
