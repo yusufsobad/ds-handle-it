@@ -450,6 +450,8 @@ class dashboard_it
 		$data['start_week'] = $week['start'];
 		$data['finish_week'] = $week['finish'];
 
+		$data['gantt'] = $data['gantt_actual'] = array();
+
 		$teams = request_curl::get_teams();
 		foreach ($teams as $key => $val) {
 			$member = self::_image_profile($val);

@@ -105,7 +105,7 @@ table.table-content {
 
 td.body-team {
     padding: 1px 3px;
-    font-size: 12px;
+    font-size: 10px;
     vertical-align: top;
 }
 
@@ -186,7 +186,7 @@ td.body-team {
 }
 
 label.title-progress {
-    font-size: 16px;
+    font-size: 15px;
     color: #4D4D4DD6;
     line-height: 1.1;
     font-weight: 600;
@@ -362,7 +362,7 @@ label.role-label {
 }
 
 .detail-title-project {
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .detail-title-project>label {
@@ -372,7 +372,7 @@ label.role-label {
 .detail-type-project>span {
     padding: 2px 7px;
     border: 1px solid #C4C4C4;
-    font-size: 11px;
+    font-size: 10px;
     border-radius: 8px;
 }
 
@@ -438,7 +438,7 @@ label.role-label {
 
 .title-box-date {
     display: inline-block;
-    font-size: 10px;
+    font-size: 9px;
 }
 
 .square-color>label {
