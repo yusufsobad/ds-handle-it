@@ -257,7 +257,7 @@ class dashboard_it
 			);
 		}
 
-		$complain = request_curl::get_complains();
+		$complain = request_curl::get_feature_projects("AND  status='-1'");
 		$total = count($complain);
 
 		$no = 1;
@@ -387,11 +387,12 @@ class dashboard_it
 		$data['picture'] = empty($args['notes_pict']) ? 'no-profile.jpg' : $args['notes_pict'];
 		$data['jobtitle'] = $args['meta_value_divi'];
 
-		$data['date_active'] = self::format_date_month($args['finish_date']);
 		$data['balance'] = 0;
 
-		$detail = array();
+		$detail = array();$last_job = '0000-00-00';
 		foreach ($handle as $key => $val) {
+			$last_job = $last_job < $val['finish_date'] ? $val['finish_date'] : $last_job;
+
 			$title = '<strong>' . $val['meta_value_feat'] . '</strong> - ' . $val['meta_value_role'];
 			$plan = self::format_date_month($val['start_date']) .'-' . self::format_date_month($val['finish_date']);
 
@@ -424,6 +425,7 @@ class dashboard_it
 			);
 		}
 
+		$data['date_active'] = self::format_date_month($last_job);
 		$data['detail'] = $detail;
 		return $data;
 	}
